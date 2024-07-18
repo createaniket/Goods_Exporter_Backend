@@ -22,11 +22,12 @@ exports.Signup = async (req, res) => {
       password,
     });
 
+    const token = await newUser.generateAuthToken();
     // Save the user to the database
     await newUser.save();
 
     // Respond with success message
-    res.status(201).json({ message: "User created successfully" });
+    res.status(201).json({ message: "User created successfully" , result:newUser, token:token});
   } catch (error) {
     console.error("Error signing up user:", error);
     res.status(500).json({ message: "Internal Server Error" });

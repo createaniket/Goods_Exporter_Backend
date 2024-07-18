@@ -50,7 +50,7 @@ const TradeContriRouter = require('./src/Routes/tradecontri')
 
 
 app.use("/user", UserRouter);
-app.use("/tradecontri", TradeContriRouter);
+app.use("/trade", TradeContriRouter);
 
 
 
