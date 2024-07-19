@@ -75,3 +75,49 @@ exports.Logout = async (req, res) => {
     });
   }
 };
+
+
+exports.GetAll = async(req, res) =>{
+
+  try {
+
+    const AllUsers = await User.find({})
+    res.status(200).json({
+      message: "The list of all the members are",
+      members:AllUsers
+    });
+    
+  } catch (error) {
+
+    console.log(error);
+    res.status(500).json({
+      message: "something went wrong",
+      error: error.message,
+    });
+    
+  }
+}
+
+
+exports.AddAvatar = async(req, res) =>{
+
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+  try {
+    const user = await User.findById(req.user._id); // Replace with your actual user ID
+    
+    console.log("i am the user", user)
+    user.avatar = req.file.path; // Store the filename in the avatar field
+    await user.save();
+
+    res.status(200).json({
+      message:"Profile pic uploaded successfully",
+      user:req.user
+    })
+
+  } catch (error) {
+    console.error('Error uploading avatar:', error);
+    res.status(500).send('Error uploading avatar.');
+  }
+}

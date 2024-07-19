@@ -13,7 +13,9 @@ const UserSchema = new mongoose.Schema(
     company: {
       type: String,
       trim: true,
-  
+    },
+    avatar:{
+      type:String
     },
 
     email: {
@@ -43,7 +45,7 @@ const UserSchema = new mongoose.Schema(
 
     files: [
       {
-        fileData: { type: Buffer, required: true },
+        filePath: { type: String, required: true }, // Store file path
         fileType: { type: String, required: true },
         filename: { type: String, required: true },
         uploadDate: { type: Date, default: Date.now },
@@ -61,9 +63,6 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-
-
-
 // Method for generating the Auth Token which is being called by the function of login and signup from Router files
 UserSchema.methods.generateAuthToken = async function () {
   const user = this;
@@ -73,9 +72,6 @@ UserSchema.methods.generateAuthToken = async function () {
   console.log(token); // consoling the token
   return token;
 };
-
-
-
 
 // Finding the user by its credentials and checking the password with our hashed one
 UserSchema.statics.findByCredentials = async (email, password) => {
@@ -94,8 +90,6 @@ UserSchema.statics.findByCredentials = async (email, password) => {
   }
   return user;
 };
-
-
 
 UserSchema.pre("save", async function (next) {
   const User = this;

@@ -23,10 +23,8 @@ exports.createTrade = async (req, res) => {
 
 
 
-function excelDateToJSDate(excelDate) {
-  console.log("I am being bhittt");
 
-  // Excel date starts from 1900-01-01
+function excelDateToJSDate(excelDate) {
   const msPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
   const epochStart = Date.UTC(1899, 11, 30); // December 30, 1899
   const utcDays = excelDate - 1; // Adjust for Excel's epoch start
@@ -41,11 +39,11 @@ exports.bulkUploadTrades = async (req, res) => {
       return res.status(400).json({ error: "File not provided" });
     }
 
-    const file = req.file;
+    const filePath = req.file.path;
     let workbook;
 
     try {
-      workbook = xlsx.read(file.buffer, { type: "buffer" });
+      workbook = xlsx.readFile(filePath);
     } catch (err) {
       return res.status(400).json({ error: "Invalid file format" });
     }
@@ -56,7 +54,6 @@ exports.bulkUploadTrades = async (req, res) => {
     }
 
     const sheet = workbook.Sheets[sheetName];
-
     const trades = xlsx.utils.sheet_to_json(sheet);
 
     const tradeDocs = trades.map((trade) => {
@@ -85,17 +82,19 @@ exports.bulkUploadTrades = async (req, res) => {
       };
     });
 
+    tradeDocs.map( (trade) => {
+      console.log("tyhentrade by one",trade)
+    })
+
     // Validate required fields
     const missingFields = tradeDocs.some(
       (doc) => !doc.company || !doc.invoiceDate || !doc.exportAmount
     );
     if (missingFields) {
-      return res
-        .status(400)
-        .json({
-          error: "Required fields are missing or invalid",
-          message: tradeDocs,
-        });
+      return res.status(400).json({
+        error: "Required fields are missing or invalid",
+        message: tradeDocs,
+      });
     }
 
     await Trade.insertMany(tradeDocs);
@@ -106,9 +105,9 @@ exports.bulkUploadTrades = async (req, res) => {
     }
 
     member.files.push({
-      fileData: file.buffer,
-      fileType: file.mimetype,
-      filename: file.originalname,
+      filePath: filePath, // Store the file path instead of the file buffer
+      fileType: req.file.mimetype,
+      filename: req.file.originalname,
     });
     await member.save();
 
