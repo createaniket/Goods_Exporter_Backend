@@ -121,3 +121,65 @@ exports.AddAvatar = async(req, res) =>{
     res.status(500).send('Error uploading avatar.');
   }
 }
+
+
+
+const generateUniqueMemberId = (createdAt) => {
+  const prefix = "SGEPC";
+  const randomDigits = Math.floor(100 + Math.random() * 900); // Random 3-digit number
+
+  // Extract the year from the date of registration (createdAt)
+  const date = new Date(createdAt);
+  const year = date.getFullYear();
+
+  return `${prefix}${randomDigits}${year}`;
+};
+
+exports.CreateUniqueMemberId = async (req, res) => {
+  try {
+    const userId = req.params.id; // Extract the user ID from the request parameters
+    const user = await User.findById(userId); // Fetch the user from the database
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found',
+      });
+    }
+
+    if (user.verified && user.uniqueMemberId) {
+      return res.status(200).json({
+        message: 'User is already a verified member',
+      });
+    }
+
+    // Generate and assign a unique member ID
+    let uniqueMemberId;
+    let isUnique = false;
+
+    while (!isUnique) {
+      uniqueMemberId = generateUniqueMemberId(user.createdAt);
+      const existingUser = await User.findOne({ uniqueMemberId });
+      if (!existingUser) {
+        isUnique = true;
+      }
+    }
+
+    user.uniqueMemberId = uniqueMemberId;
+    user.verified = true; // Update the user's verified status to true
+
+    // Save the updated user
+    await user.save();
+
+    // Return a success response
+    res.status(200).json({
+      message: 'User verified',
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Something went wrong',
+      error: error.message,
+    });
+  }
+};

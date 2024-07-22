@@ -51,6 +51,7 @@ const UserSchema = new mongoose.Schema(
         uploadDate: { type: Date, default: Date.now },
       },
     ],
+    uniqueMemberId: { type: String, unique: true },
 
     tokens: [
       {

@@ -117,3 +117,51 @@ exports.bulkUploadTrades = async (req, res) => {
     res.status(500).json({ error: "An unexpected error occurred" });
   }
 };
+
+
+
+
+exports.GetAll = async(req, res) =>{
+
+  try {
+
+    const AllTrades = await Trade.find({}).populate('member')
+    res.status(200).json({
+      message: "The list of all the Trades",
+      AllTrades:AllTrades
+    });
+    
+  } catch (error) {
+
+    console.log(error);
+    res.status(500).json({
+      message: "something went wrong",
+      error: error.message,
+    });
+    
+  }
+}
+
+
+exports.GetAllOfTheSingleUser = async(req, res) =>{
+
+  try {
+    console.log("i have been called")
+    const userId = req.params.id; 
+
+    const AllTradesOfTheUser = await Trade.find({member:userId})
+    res.status(200).json({
+      message: "The list of all the Trades of the users",
+      UsersTardes:AllTradesOfTheUser
+    });
+    
+  } catch (error) {
+
+    console.log(error);
+    res.status(500).json({
+      message: "something went wrong",
+      error: error.message,
+    });
+    
+  }
+}
