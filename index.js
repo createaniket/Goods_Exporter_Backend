@@ -42,6 +42,11 @@ db.on("disconnected", () => {
 
 const UserRouter = require('./src/Routes/users')
 const TradeContriRouter = require('./src/Routes/tradecontri')
+const StallRouter = require('./src/Routes/stall')
+const HallsRouter = require('./src/Routes/halls')
+const EventsRouter = require('./src/Routes/event')
+
+
 
 
 
@@ -51,6 +56,13 @@ const TradeContriRouter = require('./src/Routes/tradecontri')
 
 app.use("/user", UserRouter);
 app.use("/trade", TradeContriRouter);
+app.use("/stall", StallRouter);
+
+app.use('/hall', HallsRouter)
+
+app.use('/events', EventsRouter)
+
+
 
 
 
