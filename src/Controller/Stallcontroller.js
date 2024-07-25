@@ -48,3 +48,18 @@ exports.initializeStalls = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+exports.getStallsByHallId = async (req, res) => {
+    try {
+        const ID = req.params.id;
+        console.log("hjebvcjkerbver", ID)
+        const stall = await Stall.find({hall:ID});
+        if (!stall) {
+            return res.status(404).json({ error: "Stall not found" });
+        }
+        res.status(200).json(stall);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};

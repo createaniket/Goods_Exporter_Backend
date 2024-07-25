@@ -22,6 +22,7 @@ const generateStallNumbers = (initialNumber, totalStalls) => {
 exports.createHall = async (req, res) => {
     try {
         const { name, totalStalls, initialStallNumber, eventId } = req.body;
+        console.log("wjkbcjkwbckowbvclkwv", req.body)
 
         // Get the file path from the request
         const layoutFile = req.file ? req.file.path : ''; // Save the file path in the database
@@ -45,3 +46,18 @@ exports.createHall = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+exports.GetAllHalls  = async(req, res) => {
+
+    try {
+        const halls = await Hall.find();
+        // console.log("wjcbjkebv", halls)
+        res.status(200).json({halls:halls});
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+
+
+
+}

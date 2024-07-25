@@ -45,6 +45,8 @@ const TradeContriRouter = require('./src/Routes/tradecontri')
 const StallRouter = require('./src/Routes/stall')
 const HallsRouter = require('./src/Routes/halls')
 const EventsRouter = require('./src/Routes/event')
+const AdminRouter = require('./src/Routes/admin')
+
 
 
 
@@ -61,6 +63,9 @@ app.use("/stall", StallRouter);
 app.use('/hall', HallsRouter)
 
 app.use('/events', EventsRouter)
+
+app.use('/admin', AdminRouter)
+
 
 
 
