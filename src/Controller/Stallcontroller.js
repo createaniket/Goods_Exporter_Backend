@@ -11,7 +11,8 @@ exports.getStalls = async (req, res) => {
 
 exports.bookStall = async (req, res) => {
     try {
-        const { stallNumber, userId } = req.body;
+        const { stallNumber } = req.body;
+        const userId = req.user._id
         const stall = await Stall.findOne({ stallNumber });
 
         if (!stall) {
